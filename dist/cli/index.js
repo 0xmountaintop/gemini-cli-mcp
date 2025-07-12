@@ -2,22 +2,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
-const api_js_1 = require("../lib/api.js");
-const stdio_server_js_1 = require("./stdio-server.js");
+const mcp_server_js_1 = require("./mcp-server.js");
 const run_command_js_1 = require("./run-command.js");
 const program = new commander_1.Command();
 program
     .name('mcp-gemini')
     .description('MCP wrapper for Google Gemini CLI')
     .version('1.0.0');
-// Default command - start JSON-RPC server on stdin/stdout
+// Default command - start MCP server on stdin/stdout
 program
     .command('server', { isDefault: true })
     .alias('stdio')
-    .description('Start JSON-RPC server on stdin/stdout (default)')
+    .description('Start MCP server on stdin/stdout (default)')
     .action(async () => {
-    const mcpGemini = (0, api_js_1.createMcpGemini)();
-    const server = new stdio_server_js_1.StdioServer(mcpGemini);
+    const server = new mcp_server_js_1.McpGeminiServer();
     await server.start();
 });
 // One-shot run command

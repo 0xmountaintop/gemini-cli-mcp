@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { createMcpGemini } from '../lib/api.js';
-import { StdioServer } from './stdio-server.js';
+import { McpGeminiServer } from './mcp-server.js';
 import { RunCommand } from './run-command.js';
 
 const program = new Command();
@@ -12,14 +11,13 @@ program
   .description('MCP wrapper for Google Gemini CLI')
   .version('1.0.0');
 
-// Default command - start JSON-RPC server on stdin/stdout
+// Default command - start MCP server on stdin/stdout
 program
   .command('server', { isDefault: true })
   .alias('stdio')
-  .description('Start JSON-RPC server on stdin/stdout (default)')
+  .description('Start MCP server on stdin/stdout (default)')
   .action(async () => {
-    const mcpGemini = createMcpGemini();
-    const server = new StdioServer(mcpGemini);
+    const server = new McpGeminiServer();
     await server.start();
   });
 

@@ -5,75 +5,53 @@ alwaysApply: true
 
 # MCP-Gemini Project Scratchpad
 
-## Task: Implement TypeScript MCP wrapper for gemini-cli
+## Current Task: Fix MCP Protocol Implementation - COMPLETED ✅
 
-### Project Goals
-- Create npm package `@acme/mcp-gemini` with both library and CLI binary
-- Implement MCP over stdin/stdout JSON-RPC 2.0
-- Support Unix-like systems only (no Windows)
-- User pre-installs gemini CLI
-- No streaming - respond when done
+### Problem Identified - RESOLVED ✅
+The current MCP server implementation was missing the critical MCP protocol initialization handshake. After examining the MCP specification and examples, the issues were:
 
-### Implementation Plan Progress
+1. **Missing MCP Initialization**: ✅ FIXED - Now implements proper `initialize` request/response handshake
+2. **Missing Capability Negotiation**: ✅ FIXED - Added proper capability exchange between client and server
+3. **Missing `initialized` Notification**: ✅ FIXED - Now handles the initialized notification
+4. **Non-compliant Protocol**: ✅ FIXED - Converted custom JSON-RPC methods to MCP standard tools
+5. **Missing MCP SDK**: ✅ FIXED - Now uses the official `@modelcontextprotocol/sdk` package
 
-#### T1: Project Scaffolding
-[X] Initialize npm project with TypeScript
-[X] Setup tsconfig.json, eslint, jest
-[X] Create bin entry point
-[X] Setup project structure
+### MCP Protocol Requirements - ALL IMPLEMENTED ✅
+According to the specification, MCP servers must:
+1. ✅ Handle `initialize` request with protocol version and capabilities
+2. ✅ Respond with server capabilities and info
+3. ✅ Handle `initialized` notification
+4. ✅ Implement proper MCP methods (tools, resources, prompts)
+5. ✅ Use proper JSON-RPC 2.0 format
 
-#### T2: TypeScript Types & JSON-RPC
-[X] Define MCP request/response interfaces
-[X] Implement JSON-RPC 2.0 plumbing
-[X] Handle stdin/stdout communication
+### Implementation Plan - COMPLETED ✅
+[X] Identify the root cause - missing MCP protocol compliance
+[X] Install @modelcontextprotocol/sdk package
+[X] Rewrite server to use MCP SDK
+[X] Implement proper MCP initialization handshake
+[X] Convert custom methods to MCP tools
+[X] Add proper capability negotiation
+[X] Test with MCP-compliant client
+[X] Update documentation
 
-#### T3: Gemini CLI Integration
-[X] Implement spawnGemini utility
-[X] Path resolution and validation
-[X] Handle stdout/stderr capture
-[X] Add timeout options
+### What Was Fixed
+1. **Replaced Custom Server**: Replaced `StdioServer` with `McpGeminiServer` using official MCP SDK
+2. **Proper Initialization**: Implemented full MCP lifecycle (initialize → initialized → operation)
+3. **Tool-based Interface**: Converted all methods to MCP tools:
+   - `analyze_files` - Analyze multiple files with Gemini CLI
+   - `analyze_directory` - Analyze directories with Gemini CLI
+   - `verify_feature` - Verify feature implementation in codebase
+   - `raw_prompt` - Execute raw prompts without file context
+   - `get_config` / `set_config` - Configuration management
+4. **Proper Error Handling**: Using MCP error codes and proper error responses
+5. **Schema Validation**: Added proper input schemas for all tools
 
-#### T4: Library Methods
-[X] analyzeFiles method
-[X] analyzeDir method  
-[X] verifyFeature method
-[X] rawPrompt method
-[X] config.get/set methods
+## Previous Implementation (COMPLETE - v1.0.0)
 
-#### T5: CLI Implementation
-[X] JSON-RPC server mode (default)
-[X] One-shot run subcommand
-[X] Argument parsing
-
-#### T6: Testing
-[X] Integration tests with mocked gemini
-[X] Unit tests for path logic
-[X] Error handling tests
-
-#### T7: Documentation
-[X] README with usage examples
-[X] MCP to gemini-cli mapping table
-[X] IDE integration guide
-
-#### T8: CI/CD & Release
-[ ] GitHub Actions workflow
-[ ] npm publish setup
-[ ] Version 1.0.0 release
-
-## Lessons Learned
-- Jest moduleNameMapper is needed to handle .js extensions in TypeScript imports
-- TypeScript compilation preserves shebang lines in CLI binaries
-- JSON-RPC 2.0 requires proper error handling for malformed requests
-- Path resolution is crucial for cross-platform compatibility
-- Configuration management should be simple but extensible
-- **Gemini CLI stdin handling**: The Gemini CLI waits for stdin input when no file references are provided. Using `spawn` instead of `execFile` and properly closing stdin with `child.stdin.end()` is essential for proper operation.
-
-## Project Status: COMPLETE (v1.0.0)
-
-### What We've Built
+### What We Built
 1. **Complete MCP wrapper** for Gemini CLI with JSON-RPC 2.0 interface
 2. **Library and CLI modes** - can be used as npm package or standalone binary
-3. **Six MCP methods**: analyzeFiles, analyzeDir, verifyFeature, rawPrompt, config.get, config.set
+3. **Six MCP tools**: analyze_files, analyze_directory, verify_feature, raw_prompt, get_config, set_config
 4. **Robust error handling** with proper JSON-RPC error responses
 5. **Path resolution** with validation for files and directories
 6. **Configurable options** for timeout, output limits, and additional flags
@@ -84,13 +62,24 @@ alwaysApply: true
 - ✅ TypeScript compilation successful
 - ✅ All tests passing
 - ✅ CLI help commands working
-- ✅ JSON-RPC server mode functional
+- ✅ MCP protocol compliance - WORKING WITH CURSOR!
 - ✅ One-shot run mode operational
 - ✅ Library API complete
 - ✅ Documentation comprehensive
+
+## Lessons Learned
+- Jest moduleNameMapper is needed to handle .js extensions in TypeScript imports
+- TypeScript compilation preserves shebang lines in CLI binaries
+- JSON-RPC 2.0 requires proper error handling for malformed requests
+- Path resolution is crucial for cross-platform compatibility
+- Configuration management should be simple but extensible
+- **Gemini CLI stdin handling**: The Gemini CLI waits for stdin input when no file references are provided. Using `spawn` instead of `execFile` and properly closing stdin with `child.stdin.end()` is essential for proper operation.
+- **MCP Protocol Compliance**: MCP requires specific initialization handshake, capability negotiation, and standard method implementations. Custom JSON-RPC methods are not sufficient - must use MCP SDK and follow the specification exactly.
+- **MCP SDK Integration**: The official `@modelcontextprotocol/sdk` package provides all necessary components for proper MCP server implementation including Server, StdioServerTransport, and proper error handling.
 
 ## Notes
 - Starting fresh project in gemini-cli-mcp directory
 - Using TypeScript for type safety
 - JSON-RPC 2.0 for MCP compliance
 - Focus on Unix path handling only
+- **SUCCESS**: Proper MCP protocol implementation now working with Cursor!
