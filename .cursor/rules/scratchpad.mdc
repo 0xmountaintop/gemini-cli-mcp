@@ -66,6 +66,7 @@ alwaysApply: true
 - JSON-RPC 2.0 requires proper error handling for malformed requests
 - Path resolution is crucial for cross-platform compatibility
 - Configuration management should be simple but extensible
+- **Gemini CLI stdin handling**: The Gemini CLI waits for stdin input when no file references are provided. Using `spawn` instead of `execFile` and properly closing stdin with `child.stdin.end()` is essential for proper operation.
 
 ## Project Status: COMPLETE (v1.0.0)
 

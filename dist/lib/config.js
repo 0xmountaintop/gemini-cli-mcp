@@ -10,7 +10,7 @@ class ConfigManager {
         this.config = {
             geminiPath: 'gemini',
             defaultFlags: [],
-            defaultTimeout: 60,
+            defaultTimeout: 300,
             defaultMaxOutputKB: 1024,
         };
     }

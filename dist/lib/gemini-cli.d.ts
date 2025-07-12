@@ -21,6 +21,10 @@ export declare class GeminiCLI {
      */
     spawnGemini(args: string[], options?: SpawnGeminiOptions): Promise<GeminiResponse>;
     /**
+     * Execute gemini CLI using spawn with proper stdin handling
+     */
+    private spawnGeminiWithStdin;
+    /**
      * Build gemini CLI arguments for file/directory analysis
      */
     buildAnalyzeArgs(paths: string[], prompt: string, additionalFlags?: string[]): string[];

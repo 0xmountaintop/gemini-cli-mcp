@@ -1,4 +1,4 @@
-import { execFile } from 'child_process';
+import { execFile, spawn } from 'child_process';
 import { promisify } from 'util';
 import { resolve, dirname, isAbsolute } from 'path';
 import { stat, access } from 'fs/promises';
@@ -105,42 +105,14 @@ export class GeminiCLI {
         };
       }
 
-      const { stdout, stderr } = await execFileAsync(
-        this.geminiPath,
-        args,
-        {
-          timeout,
-          cwd,
-          maxBuffer: maxOutputKB * 1024, // Convert KB to bytes
-          encoding: 'utf8'
-        }
-      );
-
-      // If there's stderr content, include it in the response
-      const output = stdout + (stderr ? `\n[stderr]: ${stderr}` : '');
-
-      return {
-        ok: true,
-        output: output.trim(),
-        // Note: We don't have direct access to token usage from gemini CLI
-        // This would need to be parsed from output if available
-      };
+      // Use spawn instead of execFile to properly handle stdin
+      return await this.spawnGeminiWithStdin(args, { timeout, cwd, maxOutputKB });
 
     } catch (error) {
       let errorMessage = 'Unknown error';
       
       if (error instanceof Error) {
-        if ('code' in error && error.code === 'ETIMEDOUT') {
-          errorMessage = `Gemini CLI timed out after ${timeout/1000} seconds`;
-        } else if ('signal' in error && error.signal === 'SIGTERM') {
-          errorMessage = 'Gemini CLI was terminated';
-        } else if ('stdout' in error && 'stderr' in error) {
-          // execFile error with output
-          const execError = error as any;
-          errorMessage = `Gemini CLI error (exit code ${execError.code}): ${execError.stderr || execError.message}`;
-        } else {
-          errorMessage = error.message;
-        }
+        errorMessage = error.message;
       }
 
       return {
@@ -148,6 +120,89 @@ export class GeminiCLI {
         error: errorMessage
       };
     }
+  }
+
+  /**
+   * Execute gemini CLI using spawn with proper stdin handling
+   */
+  private async spawnGeminiWithStdin(args: string[], options: { timeout: number, cwd: string, maxOutputKB: number }): Promise<GeminiResponse> {
+    return new Promise((resolve) => {
+      const child = spawn(this.geminiPath, args, {
+        stdio: ['pipe', 'pipe', 'pipe'],
+        cwd: options.cwd
+      });
+
+      let stdout = '';
+      let stderr = '';
+      let timeoutId: NodeJS.Timeout;
+
+      // Set up timeout
+      timeoutId = setTimeout(() => {
+        child.kill('SIGTERM');
+        resolve({
+          ok: false,
+          error: `Gemini CLI timed out after ${options.timeout/1000} seconds`
+        });
+      }, options.timeout);
+
+      // Collect stdout
+      child.stdout.on('data', (data: Buffer) => {
+        stdout += data.toString();
+        
+        // Check if we've exceeded max output size
+        if (stdout.length > options.maxOutputKB * 1024) {
+          child.kill('SIGTERM');
+          clearTimeout(timeoutId);
+          resolve({
+            ok: false,
+            error: `Output exceeded maximum size of ${options.maxOutputKB}KB`
+          });
+        }
+      });
+
+      // Collect stderr
+      child.stderr.on('data', (data: Buffer) => {
+        stderr += data.toString();
+      });
+
+      // Handle process completion
+      child.on('close', (code: number | null, signal: NodeJS.Signals | null) => {
+        clearTimeout(timeoutId);
+        
+        if (signal === 'SIGTERM') {
+          // Don't resolve here if we already resolved due to timeout
+          return;
+        }
+
+        if (code === 0) {
+          // Success
+          const output = stdout + (stderr ? `\n[stderr]: ${stderr}` : '');
+          resolve({
+            ok: true,
+            output: output.trim()
+          });
+        } else {
+          // Error
+          resolve({
+            ok: false,
+            error: `Gemini CLI exited with code ${code}: ${stderr || 'Unknown error'}`
+          });
+        }
+      });
+
+      // Handle process errors
+      child.on('error', (error: Error) => {
+        clearTimeout(timeoutId);
+        resolve({
+          ok: false,
+          error: `Failed to start Gemini CLI: ${error.message}`
+        });
+      });
+
+      // Important: Close stdin immediately since we're not providing input
+      // This prevents gemini from waiting for stdin input
+      child.stdin.end();
+    });
   }
 
   /**
