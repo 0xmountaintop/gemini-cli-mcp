@@ -1,0 +1,1 @@
+{"version":3,"file":"stdio-server.d.ts","sourceRoot":"","sources":["../../src/cli/stdio-server.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,SAAS,EAAE,MAAM,eAAe,CAAC;AAE1C,qBAAa,WAAW;IACtB,OAAO,CAAC,SAAS,CAAY;gBAEjB,SAAS,EAAE,SAAS;IAIhC;;OAEG;IACG,KAAK,IAAI,OAAO,CAAC,IAAI,CAAC;CA8C7B"}
