@@ -5,10 +5,8 @@ const gemini_cli_js_1 = require("./gemini-cli.js");
 const config_js_1 = require("./config.js");
 class McpMethods {
     constructor() {
-        const geminiPath = config_js_1.config.get('geminiPath');
-        const defaultTimeout = config_js_1.config.get('defaultTimeout');
-        const defaultMaxOutputKB = config_js_1.config.get('defaultMaxOutputKB');
-        this.geminiCli = new gemini_cli_js_1.GeminiCLI(geminiPath, defaultTimeout, defaultMaxOutputKB);
+        // GeminiCLI now reads configuration dynamically, no need to pass config values
+        this.geminiCli = new gemini_cli_js_1.GeminiCLI();
     }
     /**
      * Analyze multiple files with a given prompt

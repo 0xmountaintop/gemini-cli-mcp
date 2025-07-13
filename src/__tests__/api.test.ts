@@ -61,6 +61,48 @@ describe('MCP Gemini API', () => {
     expect(result.output).toContain('Configuration updated');
   });
 
+  test('should reflect config changes immediately without instance recreation', async () => {
+    // First, get the current geminiPath
+    const getRequest = {
+      jsonrpc: '2.0' as const,
+      id: 1,
+      method: MCP_METHODS.CONFIG_GET,
+      params: { key: 'geminiPath' }
+    };
+
+    const getResponse = await mcpGemini.processRequest(getRequest);
+    expect(getResponse.result).toBeDefined();
+    const getResult = getResponse.result as any;
+    expect(getResult.ok).toBe(true);
+
+    // Set a new geminiPath
+    const setRequest = {
+      jsonrpc: '2.0' as const,
+      id: 2,
+      method: MCP_METHODS.CONFIG_SET,
+      params: { key: 'geminiPath', value: '/new/path/to/gemini' }
+    };
+
+    const setResponse = await mcpGemini.processRequest(setRequest);
+    expect(setResponse.result).toBeDefined();
+    const setResult = setResponse.result as any;
+    expect(setResult.ok).toBe(true);
+
+    // Verify the change is reflected immediately
+    const getNewRequest = {
+      jsonrpc: '2.0' as const,
+      id: 3,
+      method: MCP_METHODS.CONFIG_GET,
+      params: { key: 'geminiPath' }
+    };
+
+    const getNewResponse = await mcpGemini.processRequest(getNewRequest);
+    expect(getNewResponse.result).toBeDefined();
+    const getNewResult = getNewResponse.result as any;
+    expect(getNewResult.ok).toBe(true);
+    expect(getNewResult.output).toContain('/new/path/to/gemini');
+  });
+
   // Skip this test for now as it requires gemini CLI to be installed
   // test('should handle rawPrompt request without gemini CLI', async () => {
   //   const request = {

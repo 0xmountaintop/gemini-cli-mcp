@@ -1,9 +1,18 @@
 import { GeminiResponse, SpawnGeminiOptions, ResolvedPaths } from './types.js';
 export declare class GeminiCLI {
-    private geminiPath;
-    private defaultTimeout;
-    private defaultMaxOutputKB;
-    constructor(geminiPath?: string, defaultTimeout?: number, defaultMaxOutputKB?: number);
+    constructor();
+    /**
+     * Get the current gemini path from configuration
+     */
+    private get geminiPath();
+    /**
+     * Get the current default timeout from configuration
+     */
+    private get defaultTimeout();
+    /**
+     * Get the current default max output KB from configuration
+     */
+    private get defaultMaxOutputKB();
     /**
      * Resolve and validate file/directory paths
      */

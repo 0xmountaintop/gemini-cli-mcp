@@ -15,11 +15,8 @@ export class McpMethods {
   private geminiCli: GeminiCLI;
 
   constructor() {
-    const geminiPath = config.get('geminiPath') as string;
-    const defaultTimeout = config.get('defaultTimeout') as number;
-    const defaultMaxOutputKB = config.get('defaultMaxOutputKB') as number;
-    
-    this.geminiCli = new GeminiCLI(geminiPath, defaultTimeout, defaultMaxOutputKB);
+    // GeminiCLI now reads configuration dynamically, no need to pass config values
+    this.geminiCli = new GeminiCLI();
   }
 
   /**

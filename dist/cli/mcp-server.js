@@ -20,11 +20,8 @@ class McpGeminiServer {
                 tools: {},
             },
         });
-        // Initialize Gemini CLI
-        const geminiPath = config_js_1.config.get('geminiPath');
-        const defaultTimeout = config_js_1.config.get('defaultTimeout');
-        const defaultMaxOutputKB = config_js_1.config.get('defaultMaxOutputKB');
-        this.geminiCli = new gemini_cli_js_1.GeminiCLI(geminiPath, defaultTimeout, defaultMaxOutputKB);
+        // Initialize Gemini CLI - configuration is now read dynamically
+        this.geminiCli = new gemini_cli_js_1.GeminiCLI();
         this.setupHandlers();
     }
     setupHandlers() {

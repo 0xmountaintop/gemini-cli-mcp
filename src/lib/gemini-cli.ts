@@ -4,22 +4,34 @@ import { resolve, dirname, isAbsolute } from 'path';
 import { stat, access } from 'fs/promises';
 import { constants } from 'fs';
 import { GeminiResponse, GeminiResult, GeminiError, SpawnGeminiOptions, ResolvedPaths } from './types.js';
+import { config } from './config.js';
 
 const execFileAsync = promisify(execFile);
 
 export class GeminiCLI {
-  private geminiPath: string;
-  private defaultTimeout: number;
-  private defaultMaxOutputKB: number;
+  constructor() {
+    // Configuration is now read dynamically from the global config instance
+  }
 
-  constructor(
-    geminiPath = 'gemini',
-    defaultTimeout = 60,
-    defaultMaxOutputKB = 1024
-  ) {
-    this.geminiPath = geminiPath;
-    this.defaultTimeout = defaultTimeout;
-    this.defaultMaxOutputKB = defaultMaxOutputKB;
+  /**
+   * Get the current gemini path from configuration
+   */
+  private get geminiPath(): string {
+    return config.get('geminiPath') as string;
+  }
+
+  /**
+   * Get the current default timeout from configuration
+   */
+  private get defaultTimeout(): number {
+    return config.get('defaultTimeout') as number;
+  }
+
+  /**
+   * Get the current default max output KB from configuration
+   */
+  private get defaultMaxOutputKB(): number {
+    return config.get('defaultMaxOutputKB') as number;
   }
 
   /**

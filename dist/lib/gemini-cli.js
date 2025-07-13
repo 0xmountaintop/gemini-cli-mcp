@@ -6,12 +6,29 @@ const util_1 = require("util");
 const path_1 = require("path");
 const promises_1 = require("fs/promises");
 const fs_1 = require("fs");
+const config_js_1 = require("./config.js");
 const execFileAsync = (0, util_1.promisify)(child_process_1.execFile);
 class GeminiCLI {
-    constructor(geminiPath = 'gemini', defaultTimeout = 60, defaultMaxOutputKB = 1024) {
-        this.geminiPath = geminiPath;
-        this.defaultTimeout = defaultTimeout;
-        this.defaultMaxOutputKB = defaultMaxOutputKB;
+    constructor() {
+        // Configuration is now read dynamically from the global config instance
+    }
+    /**
+     * Get the current gemini path from configuration
+     */
+    get geminiPath() {
+        return config_js_1.config.get('geminiPath');
+    }
+    /**
+     * Get the current default timeout from configuration
+     */
+    get defaultTimeout() {
+        return config_js_1.config.get('defaultTimeout');
+    }
+    /**
+     * Get the current default max output KB from configuration
+     */
+    get defaultMaxOutputKB() {
+        return config_js_1.config.get('defaultMaxOutputKB');
     }
     /**
      * Resolve and validate file/directory paths
