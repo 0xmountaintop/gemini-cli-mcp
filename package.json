@@ -1,6 +1,6 @@
 {
   "name": "mcp-gemini",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP (Model Context Protocol) wrapper for Google Gemini CLI",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
