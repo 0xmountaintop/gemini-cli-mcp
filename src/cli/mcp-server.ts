@@ -242,7 +242,7 @@ export class McpGeminiServer {
     
     // Build arguments
     const geminiArgs = this.geminiCli.buildAnalyzeArgs(
-      resolvedPaths.relative,
+      resolvedPaths.absolute,
       prompt,
       []
     );
@@ -324,7 +324,7 @@ Provide a clear answer about whether this feature is implemented, and if so, whe
       // Analyze specific paths
       const resolvedPaths = await this.geminiCli.resolvePaths(paths);
       geminiArgs = this.geminiCli.buildAnalyzeArgs(
-        resolvedPaths.relative,
+        resolvedPaths.absolute,
         verificationPrompt,
         []
       );

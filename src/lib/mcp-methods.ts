@@ -41,11 +41,11 @@ export class McpMethods {
 
       // Resolve and validate paths
       const resolvedPaths = await this.geminiCli.resolvePaths(params.paths);
-      
-      // Build arguments using relative paths (what gemini CLI expects)
+
+      // Build arguments using absolute paths (ensures correct path resolution)
       const additionalFlags = this.buildAdditionalFlags(params.options);
       const args = this.geminiCli.buildAnalyzeArgs(
-        resolvedPaths.relative,
+        resolvedPaths.absolute,
         params.prompt,
         additionalFlags
       );
@@ -86,7 +86,7 @@ export class McpMethods {
 
       // Resolve and validate directory path
       const resolvedPaths = await this.geminiCli.resolvePaths([params.dir]);
-      const dirPath = resolvedPaths.relative[0];
+      const dirPath = resolvedPaths.absolute[0];
 
       // Build arguments
       const additionalFlags = this.buildAdditionalFlags(params.options);
@@ -132,7 +132,7 @@ export class McpMethods {
         const resolvedPaths = await this.geminiCli.resolvePaths(params.paths);
         const additionalFlags = this.buildAdditionalFlags(params.options);
         const args = this.geminiCli.buildAnalyzeArgs(
-          resolvedPaths.relative,
+          resolvedPaths.absolute,
           verificationPrompt,
           additionalFlags
         );
@@ -143,9 +143,10 @@ export class McpMethods {
         });
       } else {
         // Analyze current directory if no paths specified
+        const resolvedPaths = await this.geminiCli.resolvePaths(['.']);
         const additionalFlags = this.buildAdditionalFlags(params.options);
         const args = this.geminiCli.buildAnalyzeDirArgs(
-          '.',
+          resolvedPaths.absolute[0],
           verificationPrompt,
           true,
           additionalFlags

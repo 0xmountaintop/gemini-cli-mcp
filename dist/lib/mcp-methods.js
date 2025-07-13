@@ -28,9 +28,9 @@ class McpMethods {
             }
             // Resolve and validate paths
             const resolvedPaths = await this.geminiCli.resolvePaths(params.paths);
-            // Build arguments using relative paths (what gemini CLI expects)
+            // Build arguments using absolute paths (ensures correct path resolution)
             const additionalFlags = this.buildAdditionalFlags(params.options);
-            const args = this.geminiCli.buildAnalyzeArgs(resolvedPaths.relative, params.prompt, additionalFlags);
+            const args = this.geminiCli.buildAnalyzeArgs(resolvedPaths.absolute, params.prompt, additionalFlags);
             // Execute gemini CLI
             return await this.geminiCli.spawnGemini(args, {
                 timeout: params.options?.timeout,
@@ -64,7 +64,7 @@ class McpMethods {
             }
             // Resolve and validate directory path
             const resolvedPaths = await this.geminiCli.resolvePaths([params.dir]);
-            const dirPath = resolvedPaths.relative[0];
+            const dirPath = resolvedPaths.absolute[0];
             // Build arguments
             const additionalFlags = this.buildAdditionalFlags(params.options);
             const args = this.geminiCli.buildAnalyzeDirArgs(dirPath, params.prompt, params.recursive !== false, // default to true
@@ -100,7 +100,7 @@ class McpMethods {
             if (params.paths && params.paths.length > 0) {
                 const resolvedPaths = await this.geminiCli.resolvePaths(params.paths);
                 const additionalFlags = this.buildAdditionalFlags(params.options);
-                const args = this.geminiCli.buildAnalyzeArgs(resolvedPaths.relative, verificationPrompt, additionalFlags);
+                const args = this.geminiCli.buildAnalyzeArgs(resolvedPaths.absolute, verificationPrompt, additionalFlags);
                 return await this.geminiCli.spawnGemini(args, {
                     timeout: params.options?.timeout,
                     maxOutputKB: params.options?.maxOutputKB,
@@ -108,8 +108,9 @@ class McpMethods {
             }
             else {
                 // Analyze current directory if no paths specified
+                const resolvedPaths = await this.geminiCli.resolvePaths(['.']);
                 const additionalFlags = this.buildAdditionalFlags(params.options);
-                const args = this.geminiCli.buildAnalyzeDirArgs('.', verificationPrompt, true, additionalFlags);
+                const args = this.geminiCli.buildAnalyzeDirArgs(resolvedPaths.absolute[0], verificationPrompt, true, additionalFlags);
                 return await this.geminiCli.spawnGemini(args, {
                     timeout: params.options?.timeout,
                     maxOutputKB: params.options?.maxOutputKB,

@@ -219,7 +219,7 @@ class McpGeminiServer {
         // Resolve and validate paths
         const resolvedPaths = await this.geminiCli.resolvePaths(paths);
         // Build arguments
-        const geminiArgs = this.geminiCli.buildAnalyzeArgs(resolvedPaths.relative, prompt, []);
+        const geminiArgs = this.geminiCli.buildAnalyzeArgs(resolvedPaths.absolute, prompt, []);
         // Execute gemini CLI
         const result = await this.geminiCli.spawnGemini(geminiArgs, {
             timeout,
@@ -277,7 +277,7 @@ Provide a clear answer about whether this feature is implemented, and if so, whe
         if (paths && Array.isArray(paths) && paths.length > 0) {
             // Analyze specific paths
             const resolvedPaths = await this.geminiCli.resolvePaths(paths);
-            geminiArgs = this.geminiCli.buildAnalyzeArgs(resolvedPaths.relative, verificationPrompt, []);
+            geminiArgs = this.geminiCli.buildAnalyzeArgs(resolvedPaths.absolute, verificationPrompt, []);
         }
         else {
             // Analyze current directory
