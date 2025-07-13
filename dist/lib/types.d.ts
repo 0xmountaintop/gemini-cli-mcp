@@ -71,6 +71,7 @@ export interface ConfigStore {
     defaultFlags?: string[];
     defaultTimeout?: number;
     defaultMaxOutputKB?: number;
+    environmentVariables?: Record<string, string>;
 }
 export declare const MCP_METHODS: {
     readonly ANALYZE_FILES: "analyzeFiles";

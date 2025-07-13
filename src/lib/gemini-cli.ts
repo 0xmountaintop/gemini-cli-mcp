@@ -35,6 +35,13 @@ export class GeminiCLI {
   }
 
   /**
+   * Get environment variables for process spawning
+   */
+  private get environmentVariables(): Record<string, string> {
+    return config.getEnvironmentVariables();
+  }
+
+  /**
    * Resolve and validate file/directory paths
    */
   async resolvePaths(paths: string[], cwd: string = process.cwd()): Promise<ResolvedPaths> {
@@ -141,7 +148,8 @@ export class GeminiCLI {
     return new Promise((resolve) => {
       const child = spawn(this.geminiPath, args, {
         stdio: ['pipe', 'pipe', 'pipe'],
-        cwd: options.cwd
+        cwd: options.cwd,
+        env: this.environmentVariables
       });
 
       let stdout = '';

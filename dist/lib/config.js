@@ -8,10 +8,14 @@ class ConfigManager {
     }
     loadDefaults() {
         this.config = {
-            geminiPath: 'gemini',
+            geminiPath: process.env.GEMINI_CLI_PATH || 'gemini',
             defaultFlags: [],
             defaultTimeout: 300,
             defaultMaxOutputKB: 1024,
+            environmentVariables: {
+                GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+                GOOGLE_GENAI_USE_VERTEXAI: process.env.GOOGLE_GENAI_USE_VERTEXAI || 'false'
+            },
         };
     }
     /**
@@ -43,6 +47,28 @@ class ConfigManager {
      */
     reset() {
         this.loadDefaults();
+    }
+    /**
+     * Get environment variables for process spawning
+     * Merges configured environment variables with process.env
+     */
+    getEnvironmentVariables() {
+        const configuredEnvVars = this.config.environmentVariables || {};
+        const processEnv = {};
+        // Copy process.env, filtering out undefined values
+        for (const [key, value] of Object.entries(process.env)) {
+            if (value !== undefined) {
+                processEnv[key] = value;
+            }
+        }
+        // Merge configured environment variables, only if they have non-empty values
+        const filteredConfiguredEnvVars = {};
+        for (const [key, value] of Object.entries(configuredEnvVars)) {
+            if (value && value.trim() !== '') {
+                filteredConfiguredEnvVars[key] = value;
+            }
+        }
+        return { ...processEnv, ...filteredConfiguredEnvVars };
     }
 }
 exports.ConfigManager = ConfigManager;
