@@ -15,7 +15,7 @@ class RunCommand {
             }
             const mcpGemini = (0, api_js_1.createMcpGemini)();
             // Parse numeric options
-            const timeout = options.timeout ? parseInt(options.timeout, 10) : 60;
+            const timeout = options.timeout ? parseInt(options.timeout, 10) : 300;
             const maxOutputKB = options.maxOutput ? parseInt(options.maxOutput, 10) : 1024;
             let result;
             // Determine which method to use based on options

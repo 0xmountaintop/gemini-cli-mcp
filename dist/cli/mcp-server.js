@@ -47,7 +47,7 @@ class McpGeminiServer {
                                 timeout: {
                                     type: 'number',
                                     description: 'Timeout in seconds (optional)',
-                                    default: 60,
+                                    default: 300,
                                 },
                                 maxOutputKB: {
                                     type: 'number',
@@ -80,7 +80,7 @@ class McpGeminiServer {
                                 timeout: {
                                     type: 'number',
                                     description: 'Timeout in seconds (optional)',
-                                    default: 60,
+                                    default: 300,
                                 },
                                 maxOutputKB: {
                                     type: 'number',
@@ -109,7 +109,7 @@ class McpGeminiServer {
                                 timeout: {
                                     type: 'number',
                                     description: 'Timeout in seconds (optional)',
-                                    default: 60,
+                                    default: 300,
                                 },
                                 maxOutputKB: {
                                     type: 'number',
@@ -133,7 +133,7 @@ class McpGeminiServer {
                                 timeout: {
                                     type: 'number',
                                     description: 'Timeout in seconds (optional)',
-                                    default: 60,
+                                    default: 300,
                                 },
                                 maxOutputKB: {
                                     type: 'number',
@@ -209,7 +209,7 @@ class McpGeminiServer {
         });
     }
     async handleAnalyzeFiles(args) {
-        const { paths, prompt, timeout = 60, maxOutputKB = 1024 } = args;
+        const { paths, prompt, timeout = 300, maxOutputKB = 1024 } = args;
         if (!Array.isArray(paths) || paths.length === 0) {
             throw new types_js_1.McpError(types_js_1.ErrorCode.InvalidParams, 'paths must be a non-empty array');
         }
@@ -238,7 +238,7 @@ class McpGeminiServer {
         };
     }
     async handleAnalyzeDirectory(args) {
-        const { dir, prompt, recursive = true, timeout = 60, maxOutputKB = 1024 } = args;
+        const { dir, prompt, recursive = true, timeout = 300, maxOutputKB = 1024 } = args;
         if (!dir || typeof dir !== 'string') {
             throw new types_js_1.McpError(types_js_1.ErrorCode.InvalidParams, 'dir must be a non-empty string');
         }
@@ -265,7 +265,7 @@ class McpGeminiServer {
         };
     }
     async handleVerifyFeature(args) {
-        const { featureQuestion, paths, timeout = 60, maxOutputKB = 1024 } = args;
+        const { featureQuestion, paths, timeout = 300, maxOutputKB = 1024 } = args;
         if (!featureQuestion || typeof featureQuestion !== 'string') {
             throw new types_js_1.McpError(types_js_1.ErrorCode.InvalidParams, 'featureQuestion must be a non-empty string');
         }
@@ -301,7 +301,7 @@ Provide a clear answer about whether this feature is implemented, and if so, whe
         };
     }
     async handleRawPrompt(args) {
-        const { prompt, timeout = 60, maxOutputKB = 1024 } = args;
+        const { prompt, timeout = 300, maxOutputKB = 1024 } = args;
         if (!prompt || typeof prompt !== 'string') {
             throw new types_js_1.McpError(types_js_1.ErrorCode.InvalidParams, 'prompt must be a non-empty string');
         }

@@ -199,7 +199,7 @@ Get or set configuration values.
 ## Configuration Options
 
 - `geminiPath`: Path to the Gemini CLI binary (default: "gemini")
-- `defaultTimeout`: Default timeout in seconds (default: 60)
+- `defaultTimeout`: Default timeout in seconds (default: 300)
 - `defaultMaxOutputKB`: Default maximum output size in KB (default: 1024)
 - `defaultFlags`: Default additional flags for Gemini CLI
 

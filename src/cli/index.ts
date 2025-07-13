@@ -29,7 +29,7 @@ program
   .option('--paths <paths...>', 'Paths to include (files or directories)')
   .option('--dir <directory>', 'Directory to analyze')
   .option('--recursive', 'Analyze directory recursively', true)
-  .option('--timeout <seconds>', 'Timeout in seconds', '60')
+  .option('--timeout <seconds>', 'Timeout in seconds', '300')
   .option('--max-output <kb>', 'Maximum output size in KB', '1024')
   .action(async (options) => {
     const runCommand = new RunCommand();
