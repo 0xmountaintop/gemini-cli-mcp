@@ -9,10 +9,11 @@ export class ConfigManager {
 
   private loadDefaults(): void {
     this.config = {
-      geminiPath: 'gemini',
+      geminiPath: process.env.GEMINI_CLI_PATH || 'gemini',
       defaultFlags: [],
       defaultTimeout: 300,
       defaultMaxOutputKB: 1024,
+      environmentVariables: {},
     };
   }
 
@@ -47,6 +48,32 @@ export class ConfigManager {
    */
   reset(): void {
     this.loadDefaults();
+  }
+
+  /**
+   * Get environment variables for process spawning
+   * Merges configured environment variables with process.env
+   */
+  getEnvironmentVariables(): Record<string, string> {
+    const configuredEnvVars = this.config.environmentVariables || {};
+    const processEnv: Record<string, string> = {};
+
+    // Copy process.env, filtering out undefined values
+    for (const [key, value] of Object.entries(process.env)) {
+      if (value !== undefined) {
+        processEnv[key] = value;
+      }
+    }
+
+    // Merge configured environment variables, only if they have non-empty values
+    const filteredConfiguredEnvVars: Record<string, string> = {};
+    for (const [key, value] of Object.entries(configuredEnvVars)) {
+      if (value && value.trim() !== '') {
+        filteredConfiguredEnvVars[key] = value;
+      }
+    }
+
+    return { ...processEnv, ...filteredConfiguredEnvVars };
   }
 }
 

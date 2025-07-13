@@ -19,6 +19,11 @@ export declare class ConfigManager {
      * Reset to defaults
      */
     reset(): void;
+    /**
+     * Get environment variables for process spawning
+     * Merges configured environment variables with process.env
+     */
+    getEnvironmentVariables(): Record<string, string>;
 }
 export declare const config: ConfigManager;
 //# sourceMappingURL=config.d.ts.map

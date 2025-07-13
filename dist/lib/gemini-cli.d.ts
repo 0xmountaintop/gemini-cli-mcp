@@ -14,6 +14,10 @@ export declare class GeminiCLI {
      */
     private get defaultMaxOutputKB();
     /**
+     * Get environment variables for process spawning
+     */
+    private get environmentVariables();
+    /**
      * Resolve and validate file/directory paths
      */
     resolvePaths(paths: string[], cwd?: string): Promise<ResolvedPaths>;

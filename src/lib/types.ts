@@ -92,6 +92,7 @@ export interface ConfigStore {
   defaultFlags?: string[];
   defaultTimeout?: number;
   defaultMaxOutputKB?: number;
+  environmentVariables?: Record<string, string>;
 }
 
 // MCP method names

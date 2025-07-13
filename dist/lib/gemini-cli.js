@@ -31,6 +31,12 @@ class GeminiCLI {
         return config_js_1.config.get('defaultMaxOutputKB');
     }
     /**
+     * Get environment variables for process spawning
+     */
+    get environmentVariables() {
+        return config_js_1.config.getEnvironmentVariables();
+    }
+    /**
      * Resolve and validate file/directory paths
      */
     async resolvePaths(paths, cwd = process.cwd()) {
@@ -124,7 +130,8 @@ class GeminiCLI {
         return new Promise((resolve) => {
             const child = (0, child_process_1.spawn)(this.geminiPath, args, {
                 stdio: ['pipe', 'pipe', 'pipe'],
-                cwd: options.cwd
+                cwd: options.cwd,
+                env: this.environmentVariables
             });
             let stdout = '';
             let stderr = '';
