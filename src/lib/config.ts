@@ -13,10 +13,7 @@ export class ConfigManager {
       defaultFlags: [],
       defaultTimeout: 300,
       defaultMaxOutputKB: 1024,
-      environmentVariables: {
-        GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
-        GOOGLE_GENAI_USE_VERTEXAI: process.env.GOOGLE_GENAI_USE_VERTEXAI || 'false'
-      },
+      environmentVariables: {},
     };
   }
 
