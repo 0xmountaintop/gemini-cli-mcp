@@ -17,8 +17,8 @@ mcp configuration
 {
   "mcpServers": {
     "gemini": {
-      "command": "node",
-        "args": ["xxx/gemini-cli-mcp/dist/cli/index.js"],
+      "command": "npx",
+        "args": ["-y", "mcp-gemini"],
         "env": {
           "GEMINI_CLI_PATH": <YOUR_GEMINI_CLI_PATH>, //Optional, but it's better to set it.
           "GEMINI_API_KEY": <YOUR_GEMINI_API_KEY> // Optional if you use oauth
